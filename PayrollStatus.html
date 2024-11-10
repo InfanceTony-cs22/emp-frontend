@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Status</title>
+    <!-- Load static files for Django -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Payroll Status</h1>
+    </header>
+
+    <section>
+        <h2>Your Payroll</h2>
+        <p><strong>Upcoming Payments:</strong> {{ payroll.upcoming_payment }}</p>
+        <h3>Payroll History</h3>
+        <ul>
+            {% for history in payroll.history %}
+            <li>{{ history.date }} - {{ history.amount }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</body>
+</html>

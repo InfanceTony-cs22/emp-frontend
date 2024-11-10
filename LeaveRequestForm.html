@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Request Form</title>
+    <!-- Load static files for Django -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Request Leave</h1>
+    </header>
+
+    <section>
+        <form method="POST" action="{% url 'submit_leave_request' %}">
+            {% csrf_token %}
+            <div>
+                <label for="leave_type">Leave Type:</label>
+                <select id="leave_type" name="leave_type" required>
+                    <option value="sick">Sick Leave</option>
+                    <option value="vacation">Vacation</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" required>
+            </div>
+            <div>
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" required>
+            </div>
+            <div>
+                <label for="reason">Reason:</label>
+                <textarea id="reason" name="reason" required></textarea>
+            </div>
+            <div>
+                <button type="submit" style="background-color: lightgreen;">Submit Request</button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

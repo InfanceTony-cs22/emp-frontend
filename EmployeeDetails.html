@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details</title>
+    <!-- Load static files for Django -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Employee Details</h1>
+    </header>
+
+    <section>
+        <form method="POST" action="{% url 'employee_edit' employee.id %}">
+            {% csrf_token %}
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ employee.name }}" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ employee.email }}" required>
+            </div>
+            <div>
+                <label for="role">Role:</label>
+                <select id="role" name="role">
+                    <option value="admin" {% if employee.role == 'admin' %}selected{% endif %}>Admin</option>
+                    <option value="user" {% if employee.role == 'user' %}selected{% endif %}>User</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" style="background-color: lightgreen;">Save Changes</button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

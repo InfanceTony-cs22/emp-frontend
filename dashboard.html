@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <!-- Load static files for Django -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome, {{ user.username }}!</h1>
+    </header>
+
+    <section>
+        {% if user.is_superuser %}
+        <!-- Admin Dashboard -->
+        <h2>Admin Dashboard</h2>
+
+        <h3>Employee Management</h3>
+        <a href="{% url 'employee_list' %}">View All Employees</a>
+        <a href="{% url 'add_employee' %}">Add New Employee</a>
+
+        <h3>Leave Approvals</h3>
+        <table>
+            <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for leave in pending_leave_requests %}
+            <tr>
+                <td>{{ leave.employee_name }}</td>
+                <td>{{ leave.leave_type }}</td>
+                <td>{{ leave.start_date }}</td>
+                <td>{{ leave.end_date }}</td>
+                <td>{{ leave.status }}</td>
+                <td>
+                    <form method="POST" action="{% url 'approve_leave' leave.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color: lightgreen;">Approve</button>
+                    </form>
+                    <form method="POST" action="{% url 'deny_leave' leave.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color: red;">Deny</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h3>Payroll Overview</h3>
+        <a href="{% url 'payroll_overview' %}">View Payroll</a>
+
+        {% else %}
+        <!-- Employee Dashboard -->
+        <h2>Employee Dashboard</h2>
+
+        <h3>Your Details</h3>
+        <ul>
+            <li><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</li>
+            <li><strong>Email:</strong> {{ user.email }}</li>
+            <li><strong>Employee ID:</strong> {{ employee.employee_id }}</li>
+            <li><strong>Department:</strong> {{ employee.department }}</li>
+            <li><strong>Position:</strong> {{ employee.position }}</li>
+            <li><strong>Hire Date:</strong> {{ employee.hire_date }}</li>
+        </ul>
+
+        <h3>Your Leave Status</h3>
+        {% if leave_requests %}
+            <table>
+                <tr>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+                {% for leave in leave_requests %}
+                <tr>
+                    <td>{{ leave.start_date }}</td>
+                    <td>{{ leave.end_date }}</td>
+                    <td>{{ leave.leave_type }}</td>
+                    <td>{{ leave.status }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No leave requests found.</p>
+        {% endif %}
+
+        <h3>Your Payroll History</h3>
+        {% if payroll_records %}
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Salary</th>
+                    <th>Paid On</th>
+                </tr>
+                {% for payroll in payroll_records %}
+                <tr>
+                    <td>{{ payroll.month }}</td>
+                    <td>{{ payroll.year }}</td>
+                    <td>${{ payroll.salary }}</td>
+                    <td>{{ payroll.paid_on }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No payroll records available.</p>
+        {% endif %}
+        {% endif %}
+    </section>
+
+    <footer>
+        <a href="{% url 'logout' %}">Logout</a>
+    </footer>
+</body>
+</html>
